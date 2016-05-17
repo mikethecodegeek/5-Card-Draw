@@ -17,7 +17,7 @@ function init() {
     });
 
     socket.on('newCard', function(card) {
-        playerDrawHand.push(card);
+        playerHand.push(card);
     });
 
     $('.well').on('click', function() {
@@ -32,30 +32,31 @@ function init() {
         $('#c4').text(playerHand[3]);
         $('#c5').text(playerHand[4]);
 
-        $('#send').on('click', function () {
-            sendHand(playerHand);
-        });
-
         $('#draw').on('click', function() {
+            for (var a = 5; a< playerHand.length; a++) {
+                playerDrawHand.push(playerHand[a]);
+            }
             sendDraw(playerDrawHand);
+            sendHand(playerDrawHand);
         });
 
-        console.log('player Hand', playerHand);
+      //  console.log('player Hand', playerHand);
     });
 
     socket.on('finishDraw', function() {
-        $('#c1').text(playerDrawHand[0]).removeClass('active');
-        $('#c2').text(playerDrawHand[1]).removeClass('active');
-        $('#c3').text(playerDrawHand[2]).removeClass('active');
-        $('#c4').text(playerDrawHand[3]).removeClass('active');
-        $('#c5').text(playerDrawHand[4]).removeClass('active');
+        $('#c1').text(playerHand[5]).removeClass('active');
+        $('#c2').text(playerHand[6]).removeClass('active');
+        $('#c3').text(playerHand[7]).removeClass('active');
+        $('#c4').text(playerHand[8]).removeClass('active');
+        $('#c5').text(playerHand[9]).removeClass('active');
     });
 
     socket.on('winner', function(winner) {
-        var hand = Hand.solve(playerHand);
+        var hand = Hand.solve(playerDrawHand);
         var descr = hand.descr;
 
-        console.log(winner);
+        console.log(descr);
+        console.log(winner[0]);
         
         if (winner[0].descr === descr) {
             console.log('You win')

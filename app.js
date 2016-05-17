@@ -28,7 +28,7 @@ io.on('connection', function(socket) {
     var shuffledDeck = shuffleCards();
 
     for (var b = 0; b < 5; b++) {
-        io.emit('card', dealCard(shuffledDeck));
+        socket.emit('card', dealCard(shuffledDeck));
     }
     
     io.emit('finishDealing', 'finishDealing');
@@ -60,10 +60,11 @@ io.on('connection', function(socket) {
         var amountOfCards = 5 - hand.length;
 
         for (var i = 0; i < amountOfCards; i++) {
-            io.emit('newCard', dealCard(shuffledDeck));
+            socket.emit('newCard', shuffledDeck.pop());
+            console.log(shuffledDeck);
         }
         
-        io.emit('finishDraw', 'finishDraw');
+        socket.emit('finishDraw', 'finishDraw');
     });
 
     socket.on('disconnect', function() {
