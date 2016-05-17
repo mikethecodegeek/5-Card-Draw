@@ -53,15 +53,20 @@ io.on('connection', function(socket) {
             newHand.push(shuffledDeck.pop());
           //  console.log(shuffledDeck);
         }
-        console.log('new Hand:',newHand)
+        //console.log('new Hand:',newHand)
+        socket.emit('getDrawHand', newHand)
         socket.emit('finishDealing', newHand);
 
         selections.push(newHand);
 
         if(selections.length === 2) {
           console.log(selections);
-            var winner = determineWinner(selections);
-            io.emit('winner', winner);
+            var results = {
+              winner: determineWinner(selections),
+              player1Hand: selections[0],
+              player2Hand: selections[1]
+            }
+            io.emit('winner', results);
             selections = [];
         }
     });
