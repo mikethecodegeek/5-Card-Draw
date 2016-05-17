@@ -26,13 +26,14 @@ var selections = [];
 io.on('connection', function(socket) {
     deck();
     var shuffledDeck = shuffleCards();
-
+    var cards = [];
     for (var b = 0; b < 5; b++) {
-        socket.emit('card', dealCard(shuffledDeck));
+        cards.push(dealCard(shuffledDeck));
     }
-    
-    io.emit('finishDealing', 'finishDealing');
-    
+    socket.emit('newHand', cards)
+
+    socket.emit('finishDealing', cards);
+
     userCount++;
     console.log('userCount:', userCount);
 
@@ -45,26 +46,24 @@ io.on('connection', function(socket) {
     }
 
 
-    socket.on('sendHand', hand => {
-        console.log('player hand:', hand);
-        selections.push(hand);
+    socket.on('drawHand', hand => {
+        //var amountOfCards = 5 - hand.length;
+        var newHand = hand;
+         while(newHand.length < 5) {
+            newHand.push(shuffledDeck.pop());
+          //  console.log(shuffledDeck);
+        }
+        console.log('new Hand:',newHand)
+        socket.emit('finishDealing', newHand);
+
+        selections.push(newHand);
 
         if(selections.length === 2) {
+          console.log(selections);
             var winner = determineWinner(selections);
             io.emit('winner', winner);
             selections = [];
         }
-    });
-
-    socket.on('drawHand', hand => {
-        var amountOfCards = 5 - hand.length;
-
-        for (var i = 0; i < amountOfCards; i++) {
-            socket.emit('newCard', shuffledDeck.pop());
-            console.log(shuffledDeck);
-        }
-        
-        socket.emit('finishDraw', 'finishDraw');
     });
 
     socket.on('disconnect', function() {
