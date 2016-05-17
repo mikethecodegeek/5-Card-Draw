@@ -56,6 +56,16 @@ io.on('connection', function(socket) {
         }
     });
 
+    socket.on('drawHand', hand => {
+        var amountOfCards = 5 - hand.length;
+
+        for (var i = 0; i < amountOfCards; i++) {
+            io.emit('newCard', dealCard(shuffledDeck));
+        }
+        
+        io.emit('finishDraw', 'finishDraw');
+    });
+
     socket.on('disconnect', function() {
         userCount--;
         console.log('userCount:', userCount);
