@@ -27,47 +27,56 @@ function init() {
 
 
     $('.well').on('click', function() {
-        playerDrawHand.push($(this).text());
+        playerDrawHand.push($(this).attr('data'));
         $(this).addClass('active');
     });
 
     socket.on('finishDealing', function(hand) {
-        $('#c1').text(hand[0]);
-        $('#c2').text(hand[1]);
-        $('#c3').text(hand[2]);
-        $('#c4').text(hand[3]);
-        $('#c5').text(hand[4]);
+      var loc='./ccards/';
+      //console.log(loc+hand[0].toUpperCase()+'.png')
+        $('#c1').attr('data',(hand[0]))
+        $('#card1').attr("src",loc+hand[0].toUpperCase()+'.png');
+        $('#c2').attr('data',(hand[1]));
+        $('#card2').attr("src",loc+hand[1].toUpperCase()+'.png');
+        $('#c3').attr('data',(hand[2]));
+        $('#card3').attr("src",loc+hand[2].toUpperCase()+'.png');
+        $('#c4').attr('data',(hand[3]));
+        $('#card4').attr("src",loc+hand[3].toUpperCase()+'.png');
+        $('#c5').attr('data',(hand[4]));
+        $('#card5').attr("src",loc+hand[4].toUpperCase()+'.png');
 
         $('#draw').on('click', function() {
 
             sendDraw(playerDrawHand);
+            $('.well').removeClass('active');
 
         });
 
-    //   console.log('player Hand', playerHand);
     });
 
 
     socket.on('winner', function(winner) {
         var hand = Hand.solve(playerDrawHand);
         var descr = hand.descr;
-        console.log(playerDrawHand)
 
-        console.log(descr);
-        console.log(winner);
         if (winner.player1Hand[0] == playerDrawHand[0]) {
           var oppHand = winner.player2Hand;
         }
         else {
           var oppHand = winner.player1Hand;
         }
-        console.log(oppHand);
+        var loc='./ccards/';
         $('#opScore').text(Hand.solve(oppHand).descr);
-        $('#o1').text(oppHand[0]);
-        $('#o2').text(oppHand[1]);
-        $('#o3').text(oppHand[2]);
-        $('#o4').text(oppHand[3]);
-        $('#o5').text(oppHand[4]);
+        $('#o1').attr('data',(oppHand[0]))
+        $('#opcard1').attr("src",loc+oppHand[0].toUpperCase()+'.png');;
+        $('#o2').attr('data',(oppHand[1]))
+        $('#opcard2').attr("src",loc+oppHand[1].toUpperCase()+'.png');;
+        $('#o3').attr('data',(oppHand[2]))
+        $('#opcard3').attr("src",loc+oppHand[2].toUpperCase()+'.png');;
+        $('#o4').attr('data',(oppHand[3]))
+        $('#opcard4').attr("src",loc+oppHand[3].toUpperCase()+'.png');;
+        $('#o5').attr('data',(oppHand[4]))
+        $('#opcard5').attr("src",loc+oppHand[4].toUpperCase()+'.png');;
 
         if (winner.winner[0].descr === descr) {
             $('#winner').text('You win ' + descr)

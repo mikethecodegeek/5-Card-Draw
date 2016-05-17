@@ -60,7 +60,6 @@ io.on('connection', function(socket) {
         selections.push(newHand);
 
         if(selections.length === 2) {
-          console.log(selections);
             var results = {
               winner: determineWinner(selections),
               player1Hand: selections[0],
