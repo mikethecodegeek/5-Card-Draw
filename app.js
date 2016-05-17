@@ -20,7 +20,6 @@ app.get('/', (req, res) => {
 var server = http.createServer(app);
 var io = require('socket.io')(server);
 
-
 var userCount = 0;
 var selections = [];
 
@@ -28,8 +27,10 @@ io.on('connection', function(socket) {
     deck();
     var shuffledDeck = shuffleCards();
 
-    io.emit('shuffledDeck', shuffledDeck);
-
+    for (var b = 0; b < 5; b++) {
+        io.emit('card', dealCard(shuffledDeck));
+    }
+    
     userCount++;
     console.log('userCount:', userCount);
 
@@ -95,4 +96,8 @@ function shuffleCards() {
     }
 
     return array;
+}
+
+function dealCard(deck) {
+    return deck.pop();
 }
