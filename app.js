@@ -31,6 +31,8 @@ io.on('connection', function(socket) {
         io.emit('card', dealCard(shuffledDeck));
     }
     
+    io.emit('finishDealing', 'finishDealing');
+    
     userCount++;
     console.log('userCount:', userCount);
 

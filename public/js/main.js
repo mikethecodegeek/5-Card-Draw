@@ -13,30 +13,28 @@ function init() {
         if (playerHand.length < 5) {
             playerHand.push(card);
         }
-        
-        playHand(playerHand);
-    });
-}
-
-function playHand(playerHand) {
-    $('#c1').text(playerHand[0]);
-    $('#c2').text(playerHand[1]);
-    $('#c3').text(playerHand[2]);
-    $('#c4').text(playerHand[3]);
-    $('#c5').text(playerHand[4]);
-
-    var hand = Hand.solve(playerHand);
-    // console.log(hand.name); // Two Pair
-    //console.log(hand.descr); // Two Pair, A's & Q's
-    var descr = hand.descr;
-    $('#send').on('click', function () {
-        sendHand(playerHand);
     });
 
-    console.log('player Hand', playerHand);
+    socket.on('finishDealing', function() {
+        $('#c1').text(playerHand[0]);
+        $('#c2').text(playerHand[1]);
+        $('#c3').text(playerHand[2]);
+        $('#c4').text(playerHand[3]);
+        $('#c5').text(playerHand[4]);
 
-    socket.on('winner', function (winner) {
+        $('#send').on('click', function () {
+            sendHand(playerHand);
+        });
+
+        console.log('player Hand', playerHand);
+    });
+
+    socket.on('winner', function(winner) {
+        var hand = Hand.solve(playerHand);
+        var descr = hand.descr;
+
         console.log(winner);
+        
         if (winner[0].descr === descr) {
             console.log('You win')
         }
